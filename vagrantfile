@@ -30,37 +30,25 @@ Vagrant.configure("2") do |config|
         v.customize ["modifyvm", :id, "--groups", "/JVM Development"]
     end
 
-    project = ENV['DOCKER_USER_PLAYS']
-    config.vm.provision "shell" do |custom|
-        custom.path = "scripts/install-custom.sh"
-        custom.args = project
-    end
-
-    project = ENV['DOCKER_CORPORATE_PLAYS']
-    config.vm.provision "shell" do |corporate|
-        corporate.path = "scripts/install-corporate.sh"
-        corporate.args = project
-    end
-
-    config.vm.define "xenial-docker", primary: true do |server|
-        server.vm.box = "kurron/xenial-server-docker"
-        server.vm.hostname="xenial-docker"
+    config.vm.define "xenial-infrastructure", primary: true do |server|
+        server.vm.box = "kurron/xenial-server-infrastructure"
+        server.vm.hostname="xenial-infrastructure"
         server.vm.provider "virtualbox" do |v|
             v.gui = true
-            v.name = "jvmguy.xenial-docker"
-            v.customize ["modifyvm", :id, "--memory", "2048"]
+            v.name = "jvmguy.xenial-infrastructure"
+            v.customize ["modifyvm", :id, "--memory", "4096"]
             v.customize ["modifyvm", :id, "--vram", "24"]
             v.customize ["modifyvm", :id, "--cpus", "1"]
         end
     end
 
-    config.vm.define "maipo-docker", autostart: false do |server|
-        server.vm.box = "kurron/maipo-server-docker"
-        server.vm.hostname="maipo-docker"
+    config.vm.define "maipo-infrastructure", autostart: false do |server|
+        server.vm.box = "kurron/maipo-server-infrastructure"
+        server.vm.hostname="maipo-infrastructure"
         server.vm.provider "virtualbox" do |v|
             v.gui = true
-            v.name = "jvmguy.maipo-docker"
-            v.customize ["modifyvm", :id, "--memory", "2048"]
+            v.name = "jvmguy.maipo-infrastructure"
+            v.customize ["modifyvm", :id, "--memory", "4096"]
             v.customize ["modifyvm", :id, "--vram", "24"]
             v.customize ["modifyvm", :id, "--cpus", "1"]
         end

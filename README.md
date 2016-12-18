@@ -1,13 +1,11 @@
 #Overview
-This project is a Vagrant box that is provisioned for Docker development.  The provisioning
-mechanism is based on Ansible and allows for user-specific customizations to be applied.
+This project is a Vagrant box that is provisioned run various services needed at both build-time
+and run-time of a software project.
 
 #Prerequisites
 
 * [Vagrant](https://www.vagrantup.com/) installed and working
 * [VirtualBox](https://www.virtualbox.org/) installed and working
-* a working internet connection
-* Your corporate VPN running (if you want to apply some work-specific plays)
 
 #Building
 All the components of the environment live in repositories on the internet so there is nothing to build.
@@ -22,11 +20,11 @@ We now support multiple Linux distributions.  If you run `vagrant status` you sh
 vagrant status
 Current machine states:
 
-xenial-docker             not created (virtualbox)
-maipo-docker              not created (virtualbox)
+xenial-infrastructure             not created (virtualbox)
+maipo-infrastructure              not created (virtualbox)
 ```
 
-By default, `xenial-docker` is the default but you can also run `vagrant up maipo-docker` to run
+By default, `xenial-infrastructure` is the default but you can also run `vagrant up maipo-infrastructure` to run
 another distribution.  You can run concurrent instances if you have the hardware and the need.
 
 ## Upgrading
@@ -62,29 +60,17 @@ Log into the system with a username of `vagrant` and password of `vagrant`.
 * [Docker Compose](https://docs.docker.com/compose/)
 * [Docker Machine](https://docs.docker.com/machine/)
 * [Ansible](http://www.ansible.com/)
-
-##Applying Your Work Specific Customizations
-The system will look for an environment variable named `DOCKER_CORPORATE_PLAYS`.  If the shell running Vagrant specifies the variable
-such that it points to an Ansible project on GitHub, the plays will be run and the changes applied.  For example
-`DOCKER_CORPORATE_PLAYS = kurron/ansible-pull-transparent.git` will result in
-[this playbook](https://github.com/kurron/ansible-pull-transparent.git) getting run.  If the environment variable does
-not exist, the custom provisioning step is not run.
-
-##Applying Your Own Customizations
-The system will look for an environment variable named `DOCKER_USER_PLAYS`.  If the shell running Vagrant specifies the variable
-such that it points to an Ansible project on GitHub, the plays will be run and the changes applied.  For example
-`DOCKER_USER_PLAYS = kurron/ansible-pull-server-tweaks.git` will result in
-[this playbook](https://github.com/kurron/ansible-pull-server-tweaks) getting run.  If the environment variable does
-not exist, the custom provisioning step is not run.
+* [Artifactory](https://www.jfrog.com/artifactory/)
+* [Elastic Stack](https://www.elastic.co/v5)
 
 ##Sub-Projects
 The provisioning of the environment is done by several upstream projects.  You might be interested in examining
 exactly what they install and get a full inventory of the sofware and conveniences.
 
 * [packer-server-xenial](https://github.com/kurron/packer-server-xenial) - `master` branch
-* [packer-server-xenial](https://github.com/kurron/packer-server-xenial) - `docker` branch
+* [packer-server-xenial](https://github.com/kurron/packer-server-xenial) - `infrastructure` branch
 * [packer-server-maipo](https://github.com/kurron/packer-server-maipo) - `master` branch
-* [packer-server-maipo](https://github.com/kurron/packer-server-maipo) - `docker` branch
+* [packer-server-maipo](https://github.com/kurron/packer-server-maipo) - `infrastructure` branch
 
 #Troubleshooting
 
