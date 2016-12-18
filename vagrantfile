@@ -1,0 +1,69 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.require_version ">= 1.9.1"
+
+Vagrant.configure("2") do |config|
+    config.vagrant.host = :detect
+
+    config.vm.boot_timeout = 300
+    config.vm.box_check_update = true
+    config.vm.graceful_halt_timeout = 60
+    config.vm.post_up_message = "Login credentials are vagrant/vagrant"
+    config.vm.usable_port_range = 2200..2250
+
+    config.ssh.password = "vagrant"
+    config.ssh.username = "vagrant"
+
+    # put the box on the network so we can participate in multi-host networking
+    config.vm.network "public_network"
+
+    config.vm.provider "virtualbox" do |v|
+        v.gui = false
+        v.customize ["modifyvm", :id, "--rtcuseutc", "on"]
+        v.customize ["modifyvm", :id, "--hwvirtex", "on"]
+        v.customize ["modifyvm", :id, "--nestedpaging", "on"]
+        v.customize ["modifyvm", :id, "--vtxvpid", "on"]
+        v.customize ["modifyvm", :id, "--largepages", "on"]
+        v.customize ["modifyvm", :id, "--acpi", "on"]
+        v.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        v.customize ["modifyvm", :id, "--groups", "/JVM Development"]
+    end
+
+    project = ENV['DOCKER_USER_PLAYS']
+    config.vm.provision "shell" do |custom|
+        custom.path = "scripts/install-custom.sh"
+        custom.args = project
+    end
+
+    project = ENV['DOCKER_CORPORATE_PLAYS']
+    config.vm.provision "shell" do |corporate|
+        corporate.path = "scripts/install-corporate.sh"
+        corporate.args = project
+    end
+
+    config.vm.define "xenial-docker", primary: true do |server|
+        server.vm.box = "kurron/xenial-server-docker"
+        server.vm.hostname="xenial-docker"
+        server.vm.provider "virtualbox" do |v|
+            v.gui = true
+            v.name = "jvmguy.xenial-docker"
+            v.customize ["modifyvm", :id, "--memory", "2048"]
+            v.customize ["modifyvm", :id, "--vram", "24"]
+            v.customize ["modifyvm", :id, "--cpus", "1"]
+        end
+    end
+
+    config.vm.define "maipo-docker", autostart: false do |server|
+        server.vm.box = "kurron/maipo-server-docker"
+        server.vm.hostname="maipo-docker"
+        server.vm.provider "virtualbox" do |v|
+            v.gui = true
+            v.name = "jvmguy.maipo-docker"
+            v.customize ["modifyvm", :id, "--memory", "2048"]
+            v.customize ["modifyvm", :id, "--vram", "24"]
+            v.customize ["modifyvm", :id, "--cpus", "1"]
+        end
+    end
+
+end
