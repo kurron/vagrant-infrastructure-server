@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
         server.vm.box = "kurron/xenial-server-infrastructure"
         server.vm.hostname="xenial-infrastructure"
         server.vm.provider "virtualbox" do |v|
-            v.gui = true
+            v.gui = false
             v.name = "jvmguy.xenial-infrastructure"
             v.customize ["modifyvm", :id, "--memory", "4096"]
             v.customize ["modifyvm", :id, "--vram", "24"]
@@ -46,7 +46,7 @@ Vagrant.configure("2") do |config|
         server.vm.box = "kurron/maipo-server-infrastructure"
         server.vm.hostname="maipo-infrastructure"
         server.vm.provider "virtualbox" do |v|
-            v.gui = true
+            v.gui = false
             v.name = "jvmguy.maipo-infrastructure"
             v.customize ["modifyvm", :id, "--memory", "4096"]
             v.customize ["modifyvm", :id, "--vram", "24"]
